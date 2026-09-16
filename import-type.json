@@ -1,0 +1,83 @@
+{
+  "id": "",
+  "name": "SMARD Day-Ahead",
+  "description": "Day-ahead wholesale electricity prices for the German/Luxembourg market at quarter-hour resolution. Uses publicly available data provided by Bundesnetzagentur (SMARD).",
+  "image": "ghcr.io/senergy-platform/import-smard-dayahead:prod",
+  "default_restart": true,
+  "owner": "",
+  "cost": 0,
+  "configs": [
+    {
+      "name": "HISTORIC",
+      "description": "Import all available historic weeks once at startup.",
+      "type": "https://schema.org/Boolean",
+      "default_value": false
+    },
+    {
+      "name": "RECENT",
+      "description": "Import the most recent weeks once at startup, which also re-checks corrections SMARD occasionally makes to already published weeks.",
+      "type": "https://schema.org/Boolean",
+      "default_value": true
+    },
+    {
+      "name": "MARKET",
+      "description": "Label attached to every message as meta.market. Purely descriptive: it does not change which data is fetched, the import always reads SMARD's German/Luxembourg day-ahead auction (filter 4169, region DE).",
+      "type": "https://schema.org/Text",
+      "default_value": "DE/LU"
+    }
+  ],
+  "output": {
+    "name": "root",
+    "type": "https://schema.org/StructuredValue",
+    "sub_content_variables": [
+      {
+        "name": "import_id",
+        "type": "https://schema.org/Text",
+        "use_as_tag": true,
+        "sub_content_variables": []
+      },
+      {
+        "name": "time",
+        "type": "https://schema.org/Text",
+        "characteristic_id": "urn:infai:ses:characteristic:6bc41b45-a9f3-4d87-9c51-dd3e11257800",
+        "sub_content_variables": []
+      },
+      {
+        "name": "value",
+        "type": "https://schema.org/StructuredValue",
+        "sub_content_variables": [
+          {
+            "name": "price_eur_mwh",
+            "type": "https://schema.org/Float",
+            "function_id": "<function: Get Price>",
+            "aspect_ids": ["<aspect: Electricity Market>"],
+            "sub_content_variables": []
+          },
+          {
+            "name": "meta",
+            "type": "https://schema.org/StructuredValue",
+            "sub_content_variables": [
+              {
+                "name": "market",
+                "type": "https://schema.org/Text",
+                "use_as_tag": true,
+                "sub_content_variables": []
+              },
+              {
+                "name": "units",
+                "type": "https://schema.org/StructuredValue",
+                "sub_content_variables": [
+                  {
+                    "name": "price_eur_mwh",
+                    "type": "https://schema.org/Text",
+                    "sub_content_variables": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
